@@ -41,7 +41,7 @@ function AdminCoupons() {
               <tr key={c.id} className="border-t border-border">
                 <td className="p-3 font-mono font-bold">{c.code}</td>
                 <td>{c.discount_percent}%</td>
-                <td><input type="checkbox" checked={c.active} onChange={(e) => toggle(c.id, e.target.checked)} /></td>
+                <td><input type="checkbox" checked={!!c.active} onChange={(e) => toggle(c.id, e.target.checked)} /></td>
                 <td className="text-right pr-3"><button onClick={() => del(c.id)} className="p-1 hover:text-wine"><Trash2 className="size-4" /></button></td>
               </tr>
             ))}
