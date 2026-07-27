@@ -42,7 +42,7 @@ function Checkout() {
 
   useEffect(() => { if (items.length === 0) router.navigate({ to: "/carrinho" }); }, [items.length, router]);
 
-  const [form, setForm] = useState({ name: "", email: "", phone: "", cep: "", address: "", number: "", city: "", state: "", payment: "pix" as const });
+  const [form, setForm] = useState<{ name: string; email: string; phone: string; cep: string; address: string; number: string; city: string; state: string; payment: "pix" | "cartao" | "boleto" }>({ name: "", email: "", phone: "", cep: "", address: "", number: "", city: "", state: "", payment: "pix" });
 
   const shipping = settings && subtotal >= Number(settings.free_shipping_over) ? 0 : Number(settings?.base_shipping ?? 29.9);
   const discount = couponApplied ? subtotal * (couponApplied.percent / 100) : 0;

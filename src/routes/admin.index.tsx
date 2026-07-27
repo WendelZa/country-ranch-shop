@@ -58,7 +58,7 @@ function Dashboard() {
             <tbody>
               {(stats?.recent ?? []).slice(0, 10).map((o, i) => (
                 <tr key={i} className="border-b border-border/50">
-                  <td className="py-2">{new Date(o.created_at).toLocaleDateString("pt-BR")}</td>
+                  <td className="py-2">{o.created_at ? new Date(o.created_at).toLocaleDateString("pt-BR") : "-"}</td>
                   <td><span className="chip">{o.status}</span></td>
                   <td className="text-right font-semibold">{brl(Number(o.total))}</td>
                 </tr>

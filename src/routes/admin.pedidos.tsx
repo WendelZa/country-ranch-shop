@@ -15,7 +15,7 @@ function AdminOrders() {
   const [open, setOpen] = useState<string | null>(null);
 
   const update = async (id: string, status: string) => {
-    const { error } = await supabase.from("orders").update({ status }).eq("id", id);
+    const { error } = await supabase.from("orders").update({ status: status as "pending" | "paid" | "shipped" | "delivered" | "cancelled" }).eq("id", id);
     if (error) toast.error(error.message); else { toast.success("Atualizado"); refetch(); }
   };
 
@@ -32,11 +32,11 @@ function AdminOrders() {
                   <tr key={o.id} onClick={() => setOpen(open === o.id ? null : o.id)} className="cursor-pointer border-t border-border hover:bg-muted/50">
                     <td className="p-3 font-mono text-xs">{o.id.slice(0, 8)}</td>
                     <td>{o.customer_name}</td>
-                    <td>{new Date(o.created_at).toLocaleDateString("pt-BR")}</td>
+                    <td>{o.created_at ? new Date(o.created_at).toLocaleDateString("pt-BR") : "-"}</td>
                     <td className="font-semibold">{brl(Number(o.total))}</td>
                     <td className="uppercase text-xs">{o.payment_method}</td>
                     <td>
-                      <select value={o.status} onChange={(e) => update(o.id, e.target.value)} onClick={(e) => e.stopPropagation()} className="rounded border border-input bg-background px-2 py-1 text-xs">
+                      <select value={o.status ?? "pending"} onChange={(e) => update(o.id, e.target.value)} onClick={(e) => e.stopPropagation()} className="rounded border border-input bg-background px-2 py-1 text-xs">
                         <option value="pending">Pendente</option><option value="paid">Pago</option><option value="shipped">Enviado</option><option value="delivered">Entregue</option><option value="cancelled">Cancelado</option>
                       </select>
                     </td>

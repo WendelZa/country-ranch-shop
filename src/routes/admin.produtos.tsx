@@ -70,7 +70,7 @@ function AdminProducts() {
                   <td className={p.stock === 0 ? "text-wine font-bold" : ""}>{p.stock}</td>
                   <td>{p.active ? <span className="chip">Ativo</span> : <span className="chip bg-muted text-muted-foreground">Inativo</span>}</td>
                   <td className="text-right pr-3">
-                    <button onClick={() => setEditing(p)} className="p-1 hover:text-primary"><Pencil className="size-4" /></button>
+                    <button onClick={() => setEditing(p as unknown as ProductRow)} className="p-1 hover:text-primary"><Pencil className="size-4" /></button>
                     <button onClick={() => del(p.id)} className="p-1 hover:text-wine"><Trash2 className="size-4" /></button>
                   </td>
                 </tr>
@@ -100,7 +100,7 @@ function AdminProducts() {
               <label className="text-sm">Preço "de" (opcional)<input type="number" step="0.01" className={input} value={editing.compare_at_price ?? ""} onChange={(e) => setEditing({ ...editing, compare_at_price: e.target.value ? Number(e.target.value) : null })} /></label>
               <label className="text-sm">Estoque<input type="number" className={input} value={editing.stock ?? 0} onChange={(e) => setEditing({ ...editing, stock: Number(e.target.value) })} /></label>
               <label className="text-sm">URL da imagem<input className={input} value={editing.image_url ?? ""} onChange={(e) => setEditing({ ...editing, image_url: e.target.value })} placeholder="https://..." /></label>
-              <label className="md:col-span-2 text-sm">Tamanhos (separados por vírgula)<input className={input} value={Array.isArray(editing.sizes) ? editing.sizes.join(",") : (editing.sizes as string ?? "")} onChange={(e) => setEditing({ ...editing, sizes: e.target.value as unknown as string[] })} placeholder="P,M,G,GG" /></label>
+              <label className="md:col-span-2 text-sm">Tamanhos (separados por vírgula)<input className={input} value={Array.isArray(editing.sizes) ? editing.sizes.join(",") : ((editing.sizes as unknown as string) ?? "")} onChange={(e) => setEditing({ ...editing, sizes: e.target.value as unknown as string[] })} placeholder="P,M,G,GG" /></label>
               <label className="md:col-span-2 text-sm">Descrição<textarea className={input} rows={4} value={editing.description ?? ""} onChange={(e) => setEditing({ ...editing, description: e.target.value })} /></label>
               <label className="flex items-center gap-2 text-sm"><input type="checkbox" checked={editing.active ?? true} onChange={(e) => setEditing({ ...editing, active: e.target.checked })} /> Ativo</label>
               <label className="flex items-center gap-2 text-sm"><input type="checkbox" checked={editing.featured ?? false} onChange={(e) => setEditing({ ...editing, featured: e.target.checked })} /> Destaque na home</label>
