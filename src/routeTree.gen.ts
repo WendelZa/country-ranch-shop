@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as LojaRouteImport } from './routes/loja'
+import { Route as ContaRouteImport } from './routes/conta'
 import { Route as CheckoutRouteImport } from './routes/checkout'
 import { Route as CarrinhoRouteImport } from './routes/carrinho'
 import { Route as AuthRouteImport } from './routes/auth'
@@ -34,6 +35,11 @@ const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
 const LojaRoute = LojaRouteImport.update({
   id: '/loja',
   path: '/loja',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ContaRoute = ContaRouteImport.update({
+  id: '/conta',
+  path: '/conta',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CheckoutRoute = CheckoutRouteImport.update({
@@ -113,6 +119,7 @@ export interface FileRoutesByFullPath {
   '/auth': typeof AuthRoute
   '/carrinho': typeof CarrinhoRoute
   '/checkout': typeof CheckoutRoute
+  '/conta': typeof ContaRoute
   '/loja': typeof LojaRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/admin/config': typeof AdminConfigRoute
@@ -130,6 +137,7 @@ export interface FileRoutesByTo {
   '/auth': typeof AuthRoute
   '/carrinho': typeof CarrinhoRoute
   '/checkout': typeof CheckoutRoute
+  '/conta': typeof ContaRoute
   '/loja': typeof LojaRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/admin/config': typeof AdminConfigRoute
@@ -149,6 +157,7 @@ export interface FileRoutesById {
   '/auth': typeof AuthRoute
   '/carrinho': typeof CarrinhoRoute
   '/checkout': typeof CheckoutRoute
+  '/conta': typeof ContaRoute
   '/loja': typeof LojaRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/admin/config': typeof AdminConfigRoute
@@ -169,6 +178,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/carrinho'
     | '/checkout'
+    | '/conta'
     | '/loja'
     | '/sitemap.xml'
     | '/admin/config'
@@ -186,6 +196,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/carrinho'
     | '/checkout'
+    | '/conta'
     | '/loja'
     | '/sitemap.xml'
     | '/admin/config'
@@ -204,6 +215,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/carrinho'
     | '/checkout'
+    | '/conta'
     | '/loja'
     | '/sitemap.xml'
     | '/admin/config'
@@ -223,6 +235,7 @@ export interface RootRouteChildren {
   AuthRoute: typeof AuthRoute
   CarrinhoRoute: typeof CarrinhoRoute
   CheckoutRoute: typeof CheckoutRoute
+  ContaRoute: typeof ContaRoute
   LojaRoute: typeof LojaRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   CategoriaSlugRoute: typeof CategoriaSlugRoute
@@ -245,6 +258,13 @@ declare module '@tanstack/react-router' {
       path: '/loja'
       fullPath: '/loja'
       preLoaderRoute: typeof LojaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/conta': {
+      id: '/conta'
+      path: '/conta'
+      fullPath: '/conta'
+      preLoaderRoute: typeof ContaRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/checkout': {
@@ -372,6 +392,7 @@ const rootRouteChildren: RootRouteChildren = {
   AuthRoute: AuthRoute,
   CarrinhoRoute: CarrinhoRoute,
   CheckoutRoute: CheckoutRoute,
+  ContaRoute: ContaRoute,
   LojaRoute: LojaRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   CategoriaSlugRoute: CategoriaSlugRoute,
@@ -382,13 +403,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
