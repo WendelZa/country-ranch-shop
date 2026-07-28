@@ -52,10 +52,15 @@ export function Header() {
             <Link to="/admin" className="hidden md:inline-flex px-3 py-2 text-sm font-semibold text-wine">Admin</Link>
           )}
           {user ? (
-            <button
-              onClick={async () => { await supabase.auth.signOut(); router.navigate({ to: "/" }); }}
-              className="hidden md:inline-flex px-3 py-2 text-sm hover:text-primary"
-            >Sair</button>
+            <>
+              <Link to="/conta" className="hidden md:inline-flex items-center gap-1 px-3 py-2 text-sm hover:text-primary">
+                <UserIcon className="size-4" /> Minha Conta
+              </Link>
+              <button
+                onClick={async () => { await supabase.auth.signOut(); router.navigate({ to: "/" }); }}
+                className="hidden md:inline-flex px-3 py-2 text-sm hover:text-primary"
+              >Sair</button>
+            </>
           ) : (
             <Link to="/auth" className="hidden md:inline-flex items-center gap-1 px-3 py-2 text-sm hover:text-primary">
               <UserIcon className="size-4" /> Entrar
@@ -80,7 +85,10 @@ export function Header() {
           <Link to="/loja" onClick={() => setOpen(false)} className="block py-2 font-medium">Loja</Link>
           {admin && <Link to="/admin" onClick={() => setOpen(false)} className="block py-2 font-semibold text-wine">Painel Admin</Link>}
           {user ? (
-            <button onClick={async () => { await supabase.auth.signOut(); setOpen(false); }} className="block py-2 text-left w-full">Sair</button>
+            <>
+              <Link to="/conta" onClick={() => setOpen(false)} className="block py-2">Minha Conta</Link>
+              <button onClick={async () => { await supabase.auth.signOut(); setOpen(false); }} className="block py-2 text-left w-full">Sair</button>
+            </>
           ) : (
             <Link to="/auth" onClick={() => setOpen(false)} className="block py-2">Entrar</Link>
           )}
