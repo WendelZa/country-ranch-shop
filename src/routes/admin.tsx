@@ -1,6 +1,6 @@
 import { createFileRoute, Outlet, redirect, Link, useRouter } from "@tanstack/react-router";
 import { supabase } from "@/integrations/supabase/client";
-import { LayoutDashboard, Package, ShoppingBag, Ticket, Settings as SettingsIcon, LogOut, Store } from "lucide-react";
+import { LayoutDashboard, Package, ShoppingBag, Ticket, Settings as SettingsIcon, LogOut, Store, Sparkles, Truck, Users, BarChart3, Plug } from "lucide-react";
 
 export const Route = createFileRoute("/admin")({
   ssr: false,
@@ -20,6 +20,11 @@ function AdminLayout() {
     { to: "/admin/produtos", label: "Produtos", icon: Package },
     { to: "/admin/pedidos", label: "Pedidos", icon: ShoppingBag },
     { to: "/admin/cupons", label: "Cupons", icon: Ticket },
+    { to: "/admin/ia", label: "Gestão Automática", icon: Sparkles },
+    { to: "/admin/fornecedores", label: "Fornecedores", icon: Truck },
+    { to: "/admin/integracoes", label: "Integrações", icon: Plug },
+    { to: "/admin/usuarios", label: "Usuários", icon: Users },
+    { to: "/admin/relatorios", label: "Relatórios", icon: BarChart3 },
     { to: "/admin/config", label: "Configurações", icon: SettingsIcon },
   ];
   return (
