@@ -4,9 +4,11 @@ import { useEffect, useState } from "react";
 import { useCart } from "@/lib/store";
 import { useSession, isAdmin } from "@/lib/auth";
 import { supabase } from "@/integrations/supabase/client";
+import { useStoreSettings } from "@/lib/theme";
 
 export function Header() {
   const count = useCart((s) => s.count());
+  const { data: settings } = useStoreSettings();
   const { user } = useSession();
   const [admin, setAdmin] = useState(false);
   const [open, setOpen] = useState(false);
@@ -27,7 +29,11 @@ export function Header() {
     <header className="sticky top-0 z-40 border-b border-border/60 bg-background/95 backdrop-blur">
       <div className="mx-auto flex max-w-7xl items-center gap-3 px-4 py-3">
         <Link to="/" className="flex items-center gap-2 shrink-0">
-          <div className="grid size-10 place-items-center rounded-full bg-primary text-primary-foreground font-serif text-lg">R</div>
+          {settings?.logo_url ? (
+            <img src={settings.logo_url} alt="Rancho Sertanejo" className="h-10 w-auto object-contain" />
+          ) : (
+            <div className="grid size-10 place-items-center rounded-full bg-primary text-primary-foreground font-serif text-lg">R</div>
+          )}
           <div className="hidden sm:block leading-tight">
             <div className="font-serif text-lg font-bold text-primary">Rancho Sertanejo</div>
             <div className="text-[10px] uppercase tracking-widest text-muted-foreground">Estilo country autêntico</div>
