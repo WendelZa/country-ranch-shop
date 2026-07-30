@@ -208,33 +208,140 @@ export type Database = {
         }
         Relationships: []
       }
+      reviews: {
+        Row: {
+          approved: boolean
+          author_name: string
+          comment: string | null
+          created_at: string
+          id: string
+          photo_url: string | null
+          product_id: string | null
+          rating: number
+        }
+        Insert: {
+          approved?: boolean
+          author_name: string
+          comment?: string | null
+          created_at?: string
+          id?: string
+          photo_url?: string | null
+          product_id?: string | null
+          rating: number
+        }
+        Update: {
+          approved?: boolean
+          author_name?: string
+          comment?: string | null
+          created_at?: string
+          id?: string
+          photo_url?: string | null
+          product_id?: string | null
+          rating?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "reviews_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       store_settings: {
         Row: {
+          address: string | null
           base_shipping: number | null
+          cnpj: string | null
+          color_accent: string | null
+          color_background: string | null
+          color_foreground: string | null
+          color_primary: string | null
+          company_name: string | null
+          contact_email: string | null
+          delivery_time: string | null
+          font_family: string | null
           free_shipping_over: number | null
           id: number
+          logo_url: string | null
           pix_key: string | null
           profit_margin_percent: number | null
           updated_at: string | null
           whatsapp: string | null
         }
         Insert: {
+          address?: string | null
           base_shipping?: number | null
+          cnpj?: string | null
+          color_accent?: string | null
+          color_background?: string | null
+          color_foreground?: string | null
+          color_primary?: string | null
+          company_name?: string | null
+          contact_email?: string | null
+          delivery_time?: string | null
+          font_family?: string | null
           free_shipping_over?: number | null
           id?: number
+          logo_url?: string | null
           pix_key?: string | null
           profit_margin_percent?: number | null
           updated_at?: string | null
           whatsapp?: string | null
         }
         Update: {
+          address?: string | null
           base_shipping?: number | null
+          cnpj?: string | null
+          color_accent?: string | null
+          color_background?: string | null
+          color_foreground?: string | null
+          color_primary?: string | null
+          company_name?: string | null
+          contact_email?: string | null
+          delivery_time?: string | null
+          font_family?: string | null
           free_shipping_over?: number | null
           id?: number
+          logo_url?: string | null
           pix_key?: string | null
           profit_margin_percent?: number | null
           updated_at?: string | null
           whatsapp?: string | null
+        }
+        Relationships: []
+      }
+      suppliers: {
+        Row: {
+          active: boolean
+          created_at: string
+          env_var: string
+          id: string
+          margin: number
+          name: string
+          slug: string
+          updated_at: string
+        }
+        Insert: {
+          active?: boolean
+          created_at?: string
+          env_var: string
+          id?: string
+          margin?: number
+          name: string
+          slug: string
+          updated_at?: string
+        }
+        Update: {
+          active?: boolean
+          created_at?: string
+          env_var?: string
+          id?: string
+          margin?: number
+          name?: string
+          slug?: string
+          updated_at?: string
         }
         Relationships: []
       }
