@@ -25,12 +25,14 @@ import { Route as CategoriaSlugRouteImport } from './routes/categoria.$slug'
 import { Route as AdminUsuariosRouteImport } from './routes/admin.usuarios'
 import { Route as AdminRelatoriosRouteImport } from './routes/admin.relatorios'
 import { Route as AdminProdutosRouteImport } from './routes/admin.produtos'
+import { Route as AdminPersonalizacaoRouteImport } from './routes/admin.personalizacao'
 import { Route as AdminPedidosRouteImport } from './routes/admin.pedidos'
 import { Route as AdminIntegracoesRouteImport } from './routes/admin.integracoes'
 import { Route as AdminIaRouteImport } from './routes/admin.ia'
 import { Route as AdminFornecedoresRouteImport } from './routes/admin.fornecedores'
 import { Route as AdminCuponsRouteImport } from './routes/admin.cupons'
 import { Route as AdminConfigRouteImport } from './routes/admin.config'
+import { Route as AdminAvaliacoesRouteImport } from './routes/admin.avaliacoes'
 
 const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
   id: '/sitemap.xml',
@@ -112,6 +114,11 @@ const AdminProdutosRoute = AdminProdutosRouteImport.update({
   path: '/produtos',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminPersonalizacaoRoute = AdminPersonalizacaoRouteImport.update({
+  id: '/personalizacao',
+  path: '/personalizacao',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AdminPedidosRoute = AdminPedidosRouteImport.update({
   id: '/pedidos',
   path: '/pedidos',
@@ -142,6 +149,11 @@ const AdminConfigRoute = AdminConfigRouteImport.update({
   path: '/config',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminAvaliacoesRoute = AdminAvaliacoesRouteImport.update({
+  id: '/avaliacoes',
+  path: '/avaliacoes',
+  getParentRoute: () => AdminRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -152,12 +164,14 @@ export interface FileRoutesByFullPath {
   '/conta': typeof ContaRoute
   '/loja': typeof LojaRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/admin/avaliacoes': typeof AdminAvaliacoesRoute
   '/admin/config': typeof AdminConfigRoute
   '/admin/cupons': typeof AdminCuponsRoute
   '/admin/fornecedores': typeof AdminFornecedoresRoute
   '/admin/ia': typeof AdminIaRoute
   '/admin/integracoes': typeof AdminIntegracoesRoute
   '/admin/pedidos': typeof AdminPedidosRoute
+  '/admin/personalizacao': typeof AdminPersonalizacaoRoute
   '/admin/produtos': typeof AdminProdutosRoute
   '/admin/relatorios': typeof AdminRelatoriosRoute
   '/admin/usuarios': typeof AdminUsuariosRoute
@@ -175,12 +189,14 @@ export interface FileRoutesByTo {
   '/conta': typeof ContaRoute
   '/loja': typeof LojaRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/admin/avaliacoes': typeof AdminAvaliacoesRoute
   '/admin/config': typeof AdminConfigRoute
   '/admin/cupons': typeof AdminCuponsRoute
   '/admin/fornecedores': typeof AdminFornecedoresRoute
   '/admin/ia': typeof AdminIaRoute
   '/admin/integracoes': typeof AdminIntegracoesRoute
   '/admin/pedidos': typeof AdminPedidosRoute
+  '/admin/personalizacao': typeof AdminPersonalizacaoRoute
   '/admin/produtos': typeof AdminProdutosRoute
   '/admin/relatorios': typeof AdminRelatoriosRoute
   '/admin/usuarios': typeof AdminUsuariosRoute
@@ -200,12 +216,14 @@ export interface FileRoutesById {
   '/conta': typeof ContaRoute
   '/loja': typeof LojaRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/admin/avaliacoes': typeof AdminAvaliacoesRoute
   '/admin/config': typeof AdminConfigRoute
   '/admin/cupons': typeof AdminCuponsRoute
   '/admin/fornecedores': typeof AdminFornecedoresRoute
   '/admin/ia': typeof AdminIaRoute
   '/admin/integracoes': typeof AdminIntegracoesRoute
   '/admin/pedidos': typeof AdminPedidosRoute
+  '/admin/personalizacao': typeof AdminPersonalizacaoRoute
   '/admin/produtos': typeof AdminProdutosRoute
   '/admin/relatorios': typeof AdminRelatoriosRoute
   '/admin/usuarios': typeof AdminUsuariosRoute
@@ -226,12 +244,14 @@ export interface FileRouteTypes {
     | '/conta'
     | '/loja'
     | '/sitemap.xml'
+    | '/admin/avaliacoes'
     | '/admin/config'
     | '/admin/cupons'
     | '/admin/fornecedores'
     | '/admin/ia'
     | '/admin/integracoes'
     | '/admin/pedidos'
+    | '/admin/personalizacao'
     | '/admin/produtos'
     | '/admin/relatorios'
     | '/admin/usuarios'
@@ -249,12 +269,14 @@ export interface FileRouteTypes {
     | '/conta'
     | '/loja'
     | '/sitemap.xml'
+    | '/admin/avaliacoes'
     | '/admin/config'
     | '/admin/cupons'
     | '/admin/fornecedores'
     | '/admin/ia'
     | '/admin/integracoes'
     | '/admin/pedidos'
+    | '/admin/personalizacao'
     | '/admin/produtos'
     | '/admin/relatorios'
     | '/admin/usuarios'
@@ -273,12 +295,14 @@ export interface FileRouteTypes {
     | '/conta'
     | '/loja'
     | '/sitemap.xml'
+    | '/admin/avaliacoes'
     | '/admin/config'
     | '/admin/cupons'
     | '/admin/fornecedores'
     | '/admin/ia'
     | '/admin/integracoes'
     | '/admin/pedidos'
+    | '/admin/personalizacao'
     | '/admin/produtos'
     | '/admin/relatorios'
     | '/admin/usuarios'
@@ -418,6 +442,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminProdutosRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/admin/personalizacao': {
+      id: '/admin/personalizacao'
+      path: '/personalizacao'
+      fullPath: '/admin/personalizacao'
+      preLoaderRoute: typeof AdminPersonalizacaoRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/admin/pedidos': {
       id: '/admin/pedidos'
       path: '/pedidos'
@@ -460,16 +491,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminConfigRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/admin/avaliacoes': {
+      id: '/admin/avaliacoes'
+      path: '/avaliacoes'
+      fullPath: '/admin/avaliacoes'
+      preLoaderRoute: typeof AdminAvaliacoesRouteImport
+      parentRoute: typeof AdminRoute
+    }
   }
 }
 
 interface AdminRouteChildren {
+  AdminAvaliacoesRoute: typeof AdminAvaliacoesRoute
   AdminConfigRoute: typeof AdminConfigRoute
   AdminCuponsRoute: typeof AdminCuponsRoute
   AdminFornecedoresRoute: typeof AdminFornecedoresRoute
   AdminIaRoute: typeof AdminIaRoute
   AdminIntegracoesRoute: typeof AdminIntegracoesRoute
   AdminPedidosRoute: typeof AdminPedidosRoute
+  AdminPersonalizacaoRoute: typeof AdminPersonalizacaoRoute
   AdminProdutosRoute: typeof AdminProdutosRoute
   AdminRelatoriosRoute: typeof AdminRelatoriosRoute
   AdminUsuariosRoute: typeof AdminUsuariosRoute
@@ -477,12 +517,14 @@ interface AdminRouteChildren {
 }
 
 const AdminRouteChildren: AdminRouteChildren = {
+  AdminAvaliacoesRoute: AdminAvaliacoesRoute,
   AdminConfigRoute: AdminConfigRoute,
   AdminCuponsRoute: AdminCuponsRoute,
   AdminFornecedoresRoute: AdminFornecedoresRoute,
   AdminIaRoute: AdminIaRoute,
   AdminIntegracoesRoute: AdminIntegracoesRoute,
   AdminPedidosRoute: AdminPedidosRoute,
+  AdminPersonalizacaoRoute: AdminPersonalizacaoRoute,
   AdminProdutosRoute: AdminProdutosRoute,
   AdminRelatoriosRoute: AdminRelatoriosRoute,
   AdminUsuariosRoute: AdminUsuariosRoute,

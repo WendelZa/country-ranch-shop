@@ -34,7 +34,7 @@ function AdminTheme() {
     });
   }, [data]);
 
-  const persist = async (patch: Record<string, unknown>) => {
+  const persist = async (patch: Partial<{ font_family: string; color_primary: string; color_accent: string; color_background: string; color_foreground: string; logo_url: string | null }>) => {
     const { error } = await supabase.from("store_settings").update(patch).eq("id", 1);
     if (error) {
       toast.error(`Não foi possível salvar: ${error.message}`);

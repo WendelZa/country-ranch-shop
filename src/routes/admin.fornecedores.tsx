@@ -24,7 +24,7 @@ function AdminSuppliers() {
     },
   });
 
-  const update = async (id: string, patch: Record<string, unknown>) => {
+  const update = async (id: string, patch: Partial<{ name: string; env_var: string; margin: number; active: boolean }>) => {
     const { error } = await supabase.from("suppliers").update(patch).eq("id", id);
     if (error) toast.error(error.message);
     else qc.invalidateQueries({ queryKey: ["suppliers"] });
