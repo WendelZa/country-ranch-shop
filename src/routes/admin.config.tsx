@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
@@ -7,6 +7,7 @@ import { toast } from "sonner";
 export const Route = createFileRoute("/admin/config")({ component: AdminConfig });
 
 function AdminConfig() {
+  const qc = useQueryClient();
   const { data } = useQuery({
     queryKey: ["settings"],
     queryFn: async () => (await supabase.from("store_settings").select("*").eq("id", 1).single()).data,
