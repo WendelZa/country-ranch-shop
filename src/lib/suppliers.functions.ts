@@ -59,6 +59,27 @@ async function testCJ(apiKey: string, email: string | undefined): Promise<Suppli
   }
 }
 
+const ENDPOINTS: Record<string, string> = {
+  fforder: "https://api.fforder.com.br/v1/account",
+  mixbarato: "https://api.mixbarato.com.br/v1/me",
+  dslite: "https://api.dslite.com.br/v1/account",
+};
+
+async function testGenericBearer(slug: string, token: string, url: string): Promise<SupplierTestResult> {
+  try {
+    const res = await fetch(url, { headers: { Authorization: `Bearer ${token}`, Accept: "application/json" } });
+    if (res.ok) {
+      return { slug, ok: true, status: "connected", message: "Conectado com sucesso ao fornecedor." };
+    }
+    if (res.status === 401 || res.status === 403) {
+      return { slug, ok: false, status: "auth_failed", message: `O fornecedor recusou a credencial (HTTP ${res.status}). Verifique o valor do segredo.` };
+    }
+    return { slug, ok: false, status: "unreachable", message: `Fornecedor respondeu HTTP ${res.status}. Endpoint pode ter mudado.` };
+  } catch (e) {
+    return { slug, ok: false, status: "unreachable", message: `Não foi possível contatar o fornecedor: ${(e as Error).message}` };
+  }
+}
+
 export const testSupplierConnection = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((input: unknown) => TestInput.parse(input))
@@ -80,7 +101,16 @@ export const testSupplierConnection = createServerFn({ method: "POST" })
     }
 
     if (data.slug === "cj") {
-      return testCJ(key, data.emailEnvVar ? process.env[data.emailEnvVar] : process.env.CJ_EMAIL);
+      return testCJ(
+        key,
+        (data.emailEnvVar ? process.env[data.emailEnvVar] : undefined) ??
+          process.env.CJ_DROPSHIPPING_EMAIL ??
+          process.env.CJ_EMAIL,
+      );
+    }
+
+    if (data.slug === "fforder" || data.slug === "mixbarato" || data.slug === "dslite") {
+      return testGenericBearer(data.slug, key, ENDPOINTS[data.slug]);
     }
 
     return {
