@@ -4,7 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { ProductCard, type Product } from "@/components/ProductCard";
-import { Truck, ShieldCheck, RotateCcw, Star } from "lucide-react";
+import { Truck, ShieldCheck, RotateCcw, Star, Gift, Sparkle } from "lucide-react";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -33,6 +33,14 @@ function Home() {
     queryKey: ["bestsellers"],
     queryFn: async () => (await supabase.from("products").select("id,slug,name,price,compare_at_price,image_url,sales_count,stock").eq("active", true).order("sales_count", { ascending: false }).limit(8)).data as Product[] ?? [],
   });
+  const { data: novelties = [] } = useQuery({
+    queryKey: ["novelties"],
+    queryFn: async () => (await supabase.from("products").select("id,slug,name,price,compare_at_price,image_url,sales_count,stock").eq("active", true).order("created_at", { ascending: false }).limit(8)).data as Product[] ?? [],
+  });
+  const { data: kits = [] } = useQuery({
+    queryKey: ["kits"],
+    queryFn: async () => (await supabase.from("products").select("id,slug,name,price,compare_at_price,image_url,sales_count,stock").eq("active", true).ilike("name", "%kit%").limit(8)).data as Product[] ?? [],
+  });
 
   return (
     <div className="min-h-screen">
@@ -41,7 +49,7 @@ function Home() {
       {/* HERO */}
       <section className="relative overflow-hidden">
         <div className="absolute inset-0 -z-10 bg-gradient-to-br from-primary via-primary to-wine" />
-        <div className="absolute inset-0 -z-10 opacity-15" style={{ backgroundImage: "radial-gradient(circle at 20% 30%, oklch(0.75 0.15 78) 0px, transparent 300px), radial-gradient(circle at 80% 70%, oklch(0.7 0.15 25) 0px, transparent 400px)" }} />
+        <div className="absolute inset-0 -z-10 opacity-15" style={{ backgroundImage: "radial-gradient(circle at 20% 30%, #b78a28 0px, transparent 300px), radial-gradient(circle at 80% 70%, #8b1a1a 0px, transparent 400px)" }} />
         <div className="mx-auto grid max-w-7xl gap-8 px-4 py-16 md:py-24 md:grid-cols-2 items-center">
           <div className="text-primary-foreground">
             <span className="chip bg-accent text-accent-foreground">⭐ Nº 1 em moda country no Brasil</span>
@@ -109,6 +117,38 @@ function Home() {
           {bestsellers.map((p) => <ProductCard key={p.id} p={p} />)}
         </div>
       </section>
+
+      {/* KITS */}
+      {kits.length > 0 && (
+        <section className="mx-auto max-w-7xl px-4 py-8">
+          <div className="flex items-end justify-between mb-6">
+            <div>
+              <h2 className="font-serif text-3xl font-bold text-primary flex items-center gap-2"><Gift className="text-accent" /> Kits Estilo</h2>
+              <p className="text-muted-foreground text-sm">Combinações prontas para rodeio, lida no campo e festa</p>
+            </div>
+            <Link to="/loja" className="text-sm font-semibold text-primary hover:text-wine">Ver todos →</Link>
+          </div>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            {kits.map((p) => <ProductCard key={p.id} p={p} />)}
+          </div>
+        </section>
+      )}
+
+      {/* NOVELTIES */}
+      {novelties.length > 0 && (
+        <section className="mx-auto max-w-7xl px-4 py-8">
+          <div className="flex items-end justify-between mb-6">
+            <div>
+              <h2 className="font-serif text-3xl font-bold text-primary flex items-center gap-2"><Sparkle className="text-accent" /> Lançamentos</h2>
+              <p className="text-muted-foreground text-sm">As novidades que acabaram de chegar ao rancho</p>
+            </div>
+            <Link to="/loja" className="text-sm font-semibold text-primary hover:text-wine">Ver todos →</Link>
+          </div>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            {novelties.map((p) => <ProductCard key={p.id} p={p} />)}
+          </div>
+        </section>
+      )}
 
       {/* GUARANTEES BANNER */}
       <section className="mx-auto max-w-7xl px-4 mt-12">
