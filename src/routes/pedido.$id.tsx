@@ -56,6 +56,30 @@ function OrderPage() {
         )}
 
         <div className="card-rustic p-5 mb-5">
+          <h3 className="font-serif text-xl mb-3">Acompanhamento do pedido</h3>
+          <ol className="space-y-3 text-sm">
+            {(() => {
+              const steps = [
+                { key: "pending", label: "Pedido confirmado", desc: "Recebemos seu pedido e enviamos a confirmação por e-mail e WhatsApp." },
+                { key: "paid", label: "Pagamento confirmado", desc: "Assim que o pagamento cair, avisamos você imediatamente." },
+                { key: "shipped", label: "Enviado com rastreio", desc: "Você recebe o código de rastreio para acompanhar a entrega." },
+                { key: "delivered", label: "Entregue e pesquisa de satisfação", desc: "Após a entrega, enviamos uma pesquisa rápida de satisfação." },
+              ];
+              const order_idx = steps.findIndex((s) => s.key === (order.status ?? "pending"));
+              return steps.map((s, i) => (
+                <li key={s.key} className="flex gap-3">
+                  <span className={`mt-0.5 grid size-6 shrink-0 place-items-center rounded-full text-xs font-bold ${i <= order_idx ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground"}`}>{i + 1}</span>
+                  <span>
+                    <span className={`font-semibold ${i <= order_idx ? "text-primary" : "text-muted-foreground"}`}>{s.label}</span>
+                    <span className="block text-muted-foreground">{s.desc}</span>
+                  </span>
+                </li>
+              ));
+            })()}
+          </ol>
+        </div>
+
+        <div className="card-rustic p-5 mb-5">
           <h3 className="font-serif text-xl mb-3">Itens</h3>
           <div className="space-y-2 text-sm">
             {items.map((i, idx) => (

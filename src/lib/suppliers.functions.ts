@@ -1,6 +1,9 @@
 import { createServerFn } from "@tanstack/react-start";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 import { z } from "zod";
+import type { SupplierTestResult } from "./suppliers.types";
+import { testCJ, testGenericBearer, ENDPOINTS } from "./suppliers.server";
+export type { SupplierTestResult };
 
 /**
  * Supplier connectivity checks.
@@ -14,50 +17,7 @@ const TestInput = z.object({
   emailEnvVar: z.string().regex(/^[A-Z][A-Z0-9_]*$/).max(64).optional(),
 });
 
-export type SupplierTestResult = {
-  slug: string;
-  ok: boolean;
-  status: "connected" | "missing_secret" | "auth_failed" | "unreachable" | "not_supported";
-  message: string;
-};
 
-async function testCJ(apiKey: string, email: string | undefined): Promise<SupplierTestResult> {
-  if (!email) {
-    return {
-      slug: "cj",
-      ok: false,
-      status: "missing_secret",
-      message: "Falta o e-mail da conta CJ. Cadastre o segredo CJ_EMAIL.",
-    };
-  }
-  try {
-    const res = await fetch(
-      "https://developers.cjdropshipping.com/api2.0/v1/authentication/getAccessToken",
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password: apiKey }),
-      },
-    );
-    const json = (await res.json().catch(() => null)) as { result?: boolean; message?: string } | null;
-    if (res.ok && json?.result) {
-      return { slug: "cj", ok: true, status: "connected", message: "Conectado com sucesso à CJ Dropshipping." };
-    }
-    return {
-      slug: "cj",
-      ok: false,
-      status: "auth_failed",
-      message: `CJ recusou as credenciais (HTTP ${res.status}): ${json?.message ?? "resposta inválida"}.`,
-    };
-  } catch (e) {
-    return {
-      slug: "cj",
-      ok: false,
-      status: "unreachable",
-      message: `Não foi possível contatar a CJ: ${(e as Error).message}`,
-    };
-  }
-}
 
 export const testSupplierConnection = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
@@ -80,7 +40,16 @@ export const testSupplierConnection = createServerFn({ method: "POST" })
     }
 
     if (data.slug === "cj") {
-      return testCJ(key, data.emailEnvVar ? process.env[data.emailEnvVar] : process.env.CJ_EMAIL);
+      return testCJ(
+        key,
+        (data.emailEnvVar ? process.env[data.emailEnvVar] : undefined) ??
+          process.env.CJ_DROPSHIPPING_EMAIL ??
+          process.env.CJ_EMAIL,
+      );
+    }
+
+    if (data.slug === "fforder" || data.slug === "mixbarato" || data.slug === "dslite") {
+      return testGenericBearer(data.slug, key, ENDPOINTS[data.slug]);
     }
 
     return {

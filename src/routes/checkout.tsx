@@ -7,6 +7,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { useQuery } from "@tanstack/react-query";
 import { z } from "zod";
+import { ShieldCheck, Lock } from "lucide-react";
 
 export const Route = createFileRoute("/checkout")({
   head: () => ({ meta: [{ title: "Checkout — Rancho Sertanejo" }, { name: "description", content: "Finalize sua compra com Pix, Cartão ou Boleto." }] }),
@@ -44,8 +45,13 @@ function Checkout() {
 
   const [form, setForm] = useState<{ name: string; email: string; phone: string; cep: string; address: string; number: string; city: string; state: string; payment: "pix" | "cartao" | "boleto" }>({ name: "", email: "", phone: "", cep: "", address: "", number: "", city: "", state: "", payment: "pix" });
 
-  const shipping = settings && subtotal >= Number(settings.free_shipping_over) ? 0 : Number(settings?.base_shipping ?? 29.9);
-  const discount = couponApplied ? subtotal * (couponApplied.percent / 100) : 0;
+  const freeOver = Number(settings?.free_shipping_over ?? 199.9);
+  const shipping = subtotal >= freeOver ? 0 : Number(settings?.base_shipping ?? 29.9);
+  const missingForFree = Math.max(0, freeOver - subtotal);
+  const deliveryTime = settings?.delivery_time ?? "3 a 10 dias úteis";
+  const couponDiscount = couponApplied ? subtotal * (couponApplied.percent / 100) : 0;
+  const pixDiscount = form.payment === "pix" ? (subtotal - couponDiscount) * 0.05 : 0;
+  const discount = couponDiscount + pixDiscount;
   const total = Math.max(0, subtotal - discount + shipping);
 
   const applyCoupon = async () => {
@@ -88,6 +94,25 @@ function Checkout() {
         <h1 className="font-serif text-3xl font-bold text-primary mb-6">Finalizar compra</h1>
         <form onSubmit={submit} className="grid gap-6 md:grid-cols-[1fr_380px]">
           <div className="space-y-6">
+            <section className="card-rustic p-5">
+              <h2 className="font-serif text-xl mb-2">Frete e prazo de entrega</h2>
+              <p className="text-sm text-muted-foreground mb-3">Confira o valor e o prazo antes de informar seus dados.</p>
+              <div className="grid gap-3 sm:grid-cols-2">
+                <div className="rounded-md bg-secondary/60 p-3">
+                  <div className="text-xs text-muted-foreground">Valor do frete</div>
+                  <div className="font-serif text-xl text-primary">{shipping === 0 ? "Grátis" : brl(shipping)}</div>
+                  {missingForFree > 0 && (
+                    <div className="text-xs text-wine mt-1">Faltam {brl(missingForFree)} para frete grátis</div>
+                  )}
+                </div>
+                <div className="rounded-md bg-secondary/60 p-3">
+                  <div className="text-xs text-muted-foreground">Prazo estimado</div>
+                  <div className="font-serif text-xl text-primary">{deliveryTime}</div>
+                  <div className="text-xs text-muted-foreground mt-1">Envio em até 3 dias úteis</div>
+                </div>
+              </div>
+            </section>
+
             <section className="card-rustic p-5">
               <h2 className="font-serif text-xl mb-4">Seus dados</h2>
               <div className="grid gap-3 md:grid-cols-2">
@@ -137,11 +162,16 @@ function Checkout() {
               <button type="button" onClick={applyCoupon} className="btn-outline shrink-0">Aplicar</button>
             </div>
             <div className="text-sm flex justify-between"><span>Subtotal</span><span>{brl(subtotal)}</span></div>
-            {couponApplied && <div className="text-sm flex justify-between text-wine"><span>Cupom {couponApplied.code}</span><span>-{brl(discount)}</span></div>}
+            {couponApplied && <div className="text-sm flex justify-between text-wine"><span>Cupom {couponApplied.code}</span><span>-{brl(couponDiscount)}</span></div>}
+            {pixDiscount > 0 && <div className="text-sm flex justify-between text-wine"><span>Desconto Pix (5%)</span><span>-{brl(pixDiscount)}</span></div>}
             <div className="text-sm flex justify-between"><span>Frete</span><span>{shipping === 0 ? "Grátis" : brl(shipping)}</span></div>
             <div className="text-lg font-bold flex justify-between border-t border-border pt-3"><span>Total</span><span className="text-primary">{brl(total)}</span></div>
             <button disabled={loading} className="btn-gold w-full">{loading ? "Processando..." : "Finalizar pedido"}</button>
-            <p className="text-[11px] text-center text-muted-foreground">Compra 100% segura • Envio em até 3 dias úteis</p>
+            <div className="flex items-center justify-center gap-3 pt-1 text-[11px] text-muted-foreground">
+              <span className="inline-flex items-center gap-1"><ShieldCheck className="size-3.5 text-accent" /> Compra Segura</span>
+              <span className="inline-flex items-center gap-1"><Lock className="size-3.5 text-accent" /> Dados Protegidos</span>
+            </div>
+            <p className="text-[11px] text-center text-muted-foreground">Envio em até 3 dias úteis • Garantia de 7 dias</p>
           </aside>
         </form>
       </div>

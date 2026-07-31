@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
+import { SizeGuide } from "@/components/SizeGuide";
 
 export const Route = createFileRoute("/politicas/$page")({
   head: ({ params }) => {
@@ -184,6 +185,7 @@ function Policy() {
         <Link to="/" className="text-sm text-muted-foreground hover:text-primary">← Voltar</Link>
         <h1 className="mt-4 font-serif text-4xl font-bold text-primary">{c?.title ?? "Página"}</h1>
         {!c && <p className="mt-4 text-foreground/80">Conteúdo em construção.</p>}
+        {page === "tamanhos" && <div className="mt-8"><SizeGuide /></div>}
         {c?.sections.map((s, i) => (
           <section key={i} className="mt-8">
             {s.heading && <h2 className="font-serif text-2xl text-primary">{s.heading}</h2>}
